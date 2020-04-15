@@ -1,0 +1,43 @@
+apiVersion: skaffold/v2beta1
+kind: Config
+metadata:
+  name: ftf-skaffold
+build:
+  artifacts:
+    - image: gcr.io/@CLOUD_PROJECT_NAME@/ftf_web_app
+      context: .
+      docker:
+        dockerfile: src/docker/Dockerfile
+        cacheFrom:
+          - python:3.7-alpine
+  tagPolicy:
+    gitCommit: {}
+  local: {}
+test:
+  - image: gcr.io/@CLOUD_PROJECT_NAME@/ftf_web_app
+    structureTests:
+      - tests/test_commands.yml
+      - tests/test_metadata.yml
+profiles:
+  - name: profile-dev
+    build:
+      local:
+        push: false
+    deploy:
+      kustomize:
+        paths:
+          - src/k8s/dev
+      kubeContext: minikube
+    activation:
+      - kubeContext: minikube
+  - name: profile-prod
+    build:
+      local:
+        push: true
+    deploy:
+      kustomize:
+        paths:
+          - src/k8s/prod
+      kubeContext: "@KUBE_CONTEXT@"
+    activation:
+      - kubeContext: "@KUBE_CONTEXT@"
