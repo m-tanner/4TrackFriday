@@ -1,0 +1,11 @@
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ftf-service
+spec:
+  type: NodePort
+  ports:
+    - name: web-node
+      port: 8080
+      targetPort: 8080

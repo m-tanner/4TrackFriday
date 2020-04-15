@@ -1,0 +1,11 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ftf-deployment
+spec:
+  replicas: 1
+  template:
+    spec:
+      imagePullSecrets:
+        - name: default-token-rhfpx
