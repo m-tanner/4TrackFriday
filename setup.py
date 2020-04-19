@@ -18,6 +18,10 @@ install_requirements = [
     "six~=1.12",
     "google-cloud-storage",
     "pytz",
+    "psycopg2-binary",
+    "flask-login",
+    "werkzeug",
+    "itsdangerous",
 ]
 
 test_requirements = [
