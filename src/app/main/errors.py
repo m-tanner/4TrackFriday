@@ -5,7 +5,7 @@ from src.app.main import main
 
 @main.app_errorhandler(403)
 def forbidden(e):
-    return render_template('403.html'), 403
+    return render_template("403.html"), 403
 
 
 @main.app_errorhandler(404)

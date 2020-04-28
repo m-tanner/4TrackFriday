@@ -1,5 +1,6 @@
 import os
 
+import click
 from flask_migrate import Migrate
 
 from src.app import create_app, db
@@ -15,7 +16,10 @@ def make_shell_context():
 
 
 @app.cli.command()
-def test():
+@click.argument("pytest_arg", nargs=-1)
+def test(pytest_arg):
     import pytest
-
-    pytest.main(["-x", "tests/"])
+    if not pytest_arg:
+        pytest.main(["-x", "-s", "-v", "--disable-pytest-warnings", "tests/"])
+    else:
+        pytest.main([f"tests/{str(pytest_arg[0])}"])
