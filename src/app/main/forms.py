@@ -14,6 +14,10 @@ class EditProfileForm(FlaskForm):
     name = StringField("Real name", validators=[Length(0, 64)])
     location = StringField("Location", validators=[Length(0, 64)])
     about_me = TextAreaField("About me")
+    first_artist_forever = TextAreaField("Artist for life #1")
+    second_artist_forever = TextAreaField("Artist for life #2")
+    favorite_genres = TextAreaField("Favorite genres")
+    subscribed = BooleanField("Subscribed")
     submit = SubmitField("Submit")
 
 
@@ -58,3 +62,10 @@ class EditProfileAdminForm(FlaskForm):
             and User.query.filter_by(username=field.data).first()
         ):
             raise ValidationError("Username already in use.")
+
+
+class ContactForm(FlaskForm):
+    name = StringField("Real name", validators=[Length(0, 64)])
+    email = StringField("Email", validators=[DataRequired(), Length(1, 64), Email()])
+    message = StringField("What would you like to say?")
+    submit = SubmitField("Submit")

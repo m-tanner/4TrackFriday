@@ -22,6 +22,7 @@ install_requirements = [
     "flask-login",
     "werkzeug",
     "itsdangerous",
+    "faker",
 ]
 
 test_requirements = [

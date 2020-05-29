@@ -11,7 +11,7 @@ from src.app.auth.forms import (
     PasswordResetRequestForm,
     ChangeEmailForm,
 )
-from src.app.email import send_email
+from src.app.sender import send_email
 from src.app.models import User
 
 
