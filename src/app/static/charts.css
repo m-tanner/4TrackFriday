@@ -30,19 +30,20 @@ h2 {
 
 
 .tab {
-    overflow: hidden;
     border: 1px solid #ccc;
     background-color: #f1f1f1;
-    max-width: 720px;
+    overflow: auto;
+    white-space: nowrap;
 }
 
 .tab button {
     background-color: inherit;
-    float: left;
     border: none;
     cursor: pointer;
     padding: 14px 16px;
     transition: 0.3s;
+    display: inline-block;
+    text-decoration: none;
 }
 
 .tab button:hover {

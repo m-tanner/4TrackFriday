@@ -104,6 +104,7 @@
 {% endblock %}
 
 {% block scripts %}
+    {{ super() }}
     <script>
         function openStat(evt, statName) {
             let i, tabcontent, tablinks;
