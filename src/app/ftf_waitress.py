@@ -1,5 +1,4 @@
 from waitress import serve
-
 from src.app.ftf_flask import app
 
 

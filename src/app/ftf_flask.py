@@ -7,6 +7,9 @@ from flask_bootstrap import Bootstrap
 from src.config_manager import ConfigManager
 from src.fetcher_factory import FetcherFactory
 
+import year_in_review
+import metrics
+
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.environ["FTF_SECRET_KEY"]
 
@@ -30,6 +33,12 @@ def internal_server_error(e):
 def index():
     most_recent_episode = fetcher.fetch_most_recent()
     return render_template("episode.html", content=most_recent_episode.content)
+    
+
+@app.route("/stats", methods=["GET"])
+def stats():
+    data = metrics.get_latest_data('metrics')
+    return render_template("charts.html", metrics=data)
 
 
 @app.route("/spotify", methods=["GET"])
@@ -93,7 +102,20 @@ def health():
     return "", 200
 
 
+def fetch_playlist_data():
+    if config_manager.spotify_auth_token == None:
+      config_manager.spotify_auth_token = year_in_review.get_spotify_auth_token()
+      print('got a new auth token')
+    year_in_review.playlist_info(config_manager.spotify_auth_token)
+    metrics.generate_per_feature_metrics()
+
+
 def run():
+    try:
+      fetch_playlist_data()
+    except Exception as e:
+      # swallow Exception
+      print(e)
     app.run(host="0.0.0.0", port=80, debug=True)
 
 
