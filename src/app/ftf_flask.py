@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap
 from src.config_manager import ConfigManager
 from src.fetcher_factory import FetcherFactory
 
-app = Flask(__name__)
+app = Flask(__name__, root_path=os.path.join(os.getcwd(), "src/app"))
 app.config["SECRET_KEY"] = os.environ["FTF_SECRET_KEY"]
 
 bootstrap = Bootstrap(app)
