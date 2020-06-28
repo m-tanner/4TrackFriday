@@ -7,7 +7,7 @@ from flask_bootstrap import Bootstrap
 from src.config_manager import ConfigManager
 from src.fetcher_factory import FetcherFactory
 
-app = Flask(__name__)
+app = Flask(__name__, root_path=os.path.join(os.getcwd(), "src/app"))
 app.config["SECRET_KEY"] = os.environ["FTF_SECRET_KEY"]
 
 bootstrap = Bootstrap(app)
@@ -30,6 +30,12 @@ def internal_server_error(e):
 def index():
     most_recent_episode = fetcher.fetch_most_recent()
     return render_template("episode.html", content=most_recent_episode.content)
+
+
+@app.route("/stats", methods=["GET"])
+def stats():
+    metrics = fetcher.fetch_metrics("playlist_stats/metrics.json")
+    return render_template("charts.html", metrics=metrics)
 
 
 @app.route("/spotify", methods=["GET"])
