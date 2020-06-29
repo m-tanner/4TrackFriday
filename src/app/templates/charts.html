@@ -42,7 +42,7 @@
             <div id="{{ k }}" class="tabcontent">
                 <div style="display: flex; justify-content: space-between;">
                     <div style="margin-right: 20px; max-width: 40%;">
-                        <a target="_blank" href="{{ min_track_url }}">
+                        <a target="_blank" rel="noreferrer noopener nofollow" href="{{ min_track_url }}">
                             <img class="img-responsive" src="{{ min_pic }}" alt=""/>
                         </a>
                         <p style="text-align: left">
@@ -52,7 +52,7 @@
                         </p>
                     </div>
                     <div style="float: right; margin-left: 20px; max-width: 40%;">
-                        <a target="_blank" href="{{ max_track_url }}">
+                        <a target="_blank" rel="noreferrer noopener nofollow" href="{{ max_track_url }}">
                             <img class="img-responsive" src="{{ max_pic }}" alt=""/>
                         </a>
                         <p style="text-align: right">
@@ -123,6 +123,12 @@
                 </div>
             </div>
         {% endfor %}
+        <footer>
+            <p>
+                <br/>
+                From the <a href="https://developer.spotify.com/documentation/web-api/reference/object-model/#audio-features-object" target="_blank" rel="noreferrer noopener nofollow" style="color: #B200FD; text-decoration: underline;">audio features</a> provided by Spotify's Developer API.
+            </p>
+        </footer>
     </div>
 {% endblock %}
 
