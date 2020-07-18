@@ -35,8 +35,17 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="{{ url_for("main.about") }}">About</a></li>
                     <li><a href="{{ url_for("main.past") }}">Past Episodes</a></li>
+                    <li class="dropdown">
+                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                            About <b class="caret"></b>
+                            Playlists <b class="caret"></b>
+                        </a>
+                        <ul class="dropdown-menu">
+                            <li><a href="{{ url_for("main.about") }}">Origin Story</a></li>
+                            <li><a href="{{ url_for("main.advert") }}" target="_blank">Poster</a></li>
+                        </ul>
+                    </li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             Playlists <b class="caret"></b>
@@ -44,6 +53,7 @@
                         <ul class="dropdown-menu">
                             <li><a href="{{ url_for("main.spotify") }}">Spotify</a></li>
                             <li><a href="{{ url_for("main.apple") }}">Apple Music</a></li>
+                            <li><a href="{{ url_for("main.stats") }}">By the Numbers</a></li>
                         </ul>
                     </li>
                     <li><a href="{{ url_for("main.advert") }}" target="_blank">Advert</a></li>
@@ -88,6 +98,14 @@
 
 {% block scripts %}
     {{ super() }}
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-163853319-1"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'UA-163853319-1');
+    </script>
     {{ moment.include_jquery() }}
     {{ moment.include_moment() }}
 {% endblock %}

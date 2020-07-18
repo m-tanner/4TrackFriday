@@ -82,8 +82,8 @@ This entry point is provided by the `setup.py`.
 1) Ensure you have Docker and can successfully build Docker's hello-world example
 2) `docker build -t ftf_web_app -f src/docker/Dockerfile .`
 3) `docker run --name ftf -p 8080:8080 -e FTF_SECRET_KEY="<some_secret_key>"-e CLOUD_PROVIDER="gcloud" -e GOOGLE_APPLICATION_CREDENTIALS=/path/to/application/credentials -v $GOOGLE_APPLICATION_CREDENTIALS:/path/to/application/credentials -d ftf_web_app:latest`
-4) `docker tag ftf_web_app:latest gcr.io/four-track-friday-2/ftf_web_app`
-5) `docker push gcr.io/four-track-friday-2/ftf_web_app`
+4) `docker tag ftf_web_app:latest gcr.io/<CLOUD_PROJECT_NAME>/ftf_web_app`
+5) `docker push gcr.io/<CLOUD_PROJECT_NAME>/ftf_web_app`
 
 ## Deploy
 1) Ensure you have kubectl installed and properly configured with minikube running
