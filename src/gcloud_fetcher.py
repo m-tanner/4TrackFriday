@@ -1,6 +1,5 @@
-import json
 from datetime import datetime
-from typing import List, Dict
+from typing import List
 
 import pytz
 from google.cloud import storage
@@ -97,6 +96,3 @@ class GCloudFetcher(Fetcher):
         )
 
         return episodes
-
-    def fetch_metrics(self, path_to_stats: str) -> Dict[str, str]:
-        return json.loads(self.fetch_string_content(episode_key=path_to_stats))

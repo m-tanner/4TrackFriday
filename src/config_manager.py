@@ -3,6 +3,6 @@ import os
 
 class ConfigManager:
     def __init__(self):
-        self.cloud_provider = os.environ["CLOUD_PROVIDER"]  # raises error if not found
-        self.gcloud_project = os.environ.get("GCLOUD_PROJECT")
-        self.static_4tf_bucket = os.environ.get("STATIC_4TF_BUCKET")
+        self.cloud_provider = os.getenv("CLOUD_PROVIDER")
+        self.gcloud_project = os.getenv("GCLOUD_PROJECT")
+        self.static_4tf_bucket = os.getenv("STATIC_4TF_BUCKET")

@@ -2,15 +2,27 @@ from setuptools import setup, find_packages
 
 install_requirements = [
     "flask",
+    "click",
     "waitress",
     "wtforms",
     "flask-wtf",
     "flask-bootstrap",
+    "flask-mail",
+    "flask-moment",
+    "flask-sqlalchemy",
+    "flask-migrate",
+    "alembic",
+    "sqlalchemy",
     "boto3",
     "botocore~=1.14",
     "six~=1.12",
     "google-cloud-storage",
     "pytz",
+    "psycopg2-binary",
+    "flask-login",
+    "werkzeug",
+    "itsdangerous",
+    "faker",
 ]
 
 test_requirements = [

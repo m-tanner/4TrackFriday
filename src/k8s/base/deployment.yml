@@ -20,13 +20,29 @@ spec:
         - name: ftf-secret
       containers:
         - name: ftf-web-app
-          image: "gcr.io/@CLOUD_PROJECT_NAME@/ftf_web_app"
+          image: "gcr.io/four-track-friday-2/ftf_web_app"
           imagePullPolicy: IfNotPresent
-          envFrom:
-            - secretRef:
-                name: ftf-secret
-            - configMapRef:
-                name: ftf-config-map
+          env:
+            - name: FTF_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: ftf-secret
+                  key: FTF_SECRET_KEY
+            - name: GCLOUD_PROJECT
+              valueFrom:
+                secretKeyRef:
+                  name: ftf-secret
+                  key: GCLOUD_PROJECT
+            - name: STATIC_4TF_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  name: ftf-secret
+                  key: STATIC_4TF_BUCKET
+            - name: CLOUD_PROVIDER
+              valueFrom:
+                configMapKeyRef:
+                  name: ftf-config-map
+                  key: CLOUD_PROVIDER
           livenessProbe:
             httpGet:
               port: 8080
@@ -43,10 +59,10 @@ spec:
             timeoutSeconds: 1
           resources:
             limits:
-              cpu: 500m
+              cpu: 250m
               memory: 128Mi
             requests:
-              cpu: 1m
+              cpu: 100m
               memory: 64Mi
       dnsPolicy: ClusterFirst
       restartPolicy: Always
