@@ -1,3 +1,5 @@
+import os
+
 from flask import Flask
 from flask_bootstrap import Bootstrap
 from flask_login import LoginManager
@@ -22,7 +24,7 @@ fetcher = FetcherFactory(config=config_manager).get_fetcher()
 
 
 def create_app(config_type: str) -> Flask:
-    app = Flask(__name__)
+    app = Flask(__name__, root_path=os.path.join(os.getcwd(), "src/app"))
     app_config = config_factory.get_config(config_type)
     app.config.from_object(app_config)
 

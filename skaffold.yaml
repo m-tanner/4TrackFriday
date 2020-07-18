@@ -38,6 +38,6 @@ profiles:
       kustomize:
         paths:
           - src/k8s/prod
-      kubeContext: @KUBE_CONTEXT@
+      kubeContext: "@KUBE_CONTEXT@"
     activation:
-      - kubeContext: @KUBE_CONTEXT@
+      - kubeContext: "@KUBE_CONTEXT@"

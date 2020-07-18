@@ -263,6 +263,12 @@ def apple():
     )
 
 
+@main.route("/stats", methods=["GET"])
+def stats():
+    metrics = fetcher.fetch_metrics("playlist_stats/metrics.json")
+    return render_template("charts.html", metrics=metrics)
+
+
 @main.route("/icon", methods=["GET"])
 def icon():
     return send_file(
@@ -301,6 +307,14 @@ def past():
 def show(folder, content):
     html_string = fetcher.fetch_string_content(f"{folder}/{content}")
     return render_template("episode.html", content=html_string)
+
+
+@main.route("/survey/year1", methods=["GET"])
+def year_one():
+    return render_template(
+        "playlist.html",
+        content='<script>(function(t,e,s,n){var o,a,c;t.SMCX=t.SMCX||[],e.getElementById(n)||(o=e.getElementsByTagName(s),a=o[o.length-1],c=e.createElement(s),c.type="text/javascript",c.async=!0,c.id=n,c.src="https://widget.surveymonkey.com/collect/website/js/tRaiETqnLgj758hTBazgd_2BNHLyIwmuFE7cezwkskiiyXNdjC0koxkoexplTiSB_2Fg.js",a.parentNode.insertBefore(c,a))})(window,document,"script","smcx-sdk");</script><a style="font: 12px Helvetica, sans-serif; color: #999; text-decoration: none;" href=www.surveymonkey.com> Create your own user feedback survey </a>'
+    )
 
 
 @main.route("/health", methods=["GET"])
