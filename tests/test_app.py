@@ -6,7 +6,7 @@ from src.app import create_app, db
 
 @pytest.fixture
 def resource():
-    app = create_app("testing")
+    app = create_app("test")
     app_context = app.app_context()
     app_context.push()
     db.create_all()

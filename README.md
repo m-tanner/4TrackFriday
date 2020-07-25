@@ -18,9 +18,13 @@ pipeline, which you can inspect at `skaffold.yml`. This is all deployed live at 
 `brew install skaffold`<br/>
 `brew tap heroku/brew && brew install heroku`<br/>
 `https://cloud.google.com/sdk/docs/quickstart-macos`<br/>
-`https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html`
-2) Start minikube<br/>
-`minikube start --driver=hyperkit`<br/>
+`https://docs.aws.amazon.com/cli/latest/userguide/install-cliv2-mac.html`<br/>
+2a) Start minikube with the same version as the GKE cluster<br/>
+`minikube start --driver=hyperkit --kubernetes-version=v1.16.12 --mount-string="$HOME/path/to/creds.json:/hosthome/creds.json" --mount`<br/>
+`kubectl create namespace development`
+`minikube addons enable ingress`
+2b) See the pretty UI by running<br/>
+`minikube dashboard`
 3) Clone this repo<br/> 
 `git clone <url>`
 4) Create a virtual environment for the project<br/>
@@ -60,12 +64,30 @@ export FLASK_APP="path/to/four_track_friday.py"
 export FTF_SECRET_KEY="<some wicked string>"
 ```
 8) To view the Heroku-stored DB's in Intellij follow [this guide](https://www.jetbrains.com/help/datagrip/how-to-connect-to-heroku-postgres.html)
-8) You could also run a local instance of MySQL and update the database URL's to point locally, I recommend MariaDB
-For instructions on how to do this, see [Docker's MariaDB documentation](https://hub.docker.com/_/mariadb)
-`docker run --name maria -e MYSQL_ROOT_PASSWORD=$MYSQL_ROOT_PASSWORD -e MYSQL_DATABASE=$MYSQL_DATABASE -d mariadb:latest`
+8) You could also run a local instance of MySQL and update the database URL's to point locally, I recommend PostgreSQL
+For instructions on how to do this, see [Docker's Postgres documentation](https://hub.docker.com/_/postgres)
+`docker run --name ftf_postgres_dev -e POSTGRES_USER=dev -e POSTGRES_PASSWORD=dev -p 5432:5432 -d postgres:latest`
+Swapping out `dev` for `test` or `prod` would allow you to locally reproduce different environments
+To have all three running at once, be sure to map non-conflicting ports, i.e.
+`docker run --name ftf_postgres_test -e POSTGRES_USER=test -e POSTGRES_PASSWORD=test -p 5431:5432 -d postgres:latest`
+`docker run --name ftf_postgres_prod -e POSTGRES_USER=prod -e POSTGRES_PASSWORD=prod -p 5433:5432 -d postgres:latest`
 To connect to shell inside the running container:
-`docker exec -it maria /bin/bash`
-For more help, see [MariaDB's help](https://mariadb.com/kb/en/installing-and-using-mariadb-via-docker/)
+`docker exec -it ftf_postgres_dev /bin/bash`
+This then requires your bash profile to look like:
+```bash
+export DATABASE_URL="postgres://prod:prod@localhost:5433/prod"
+export DEV_DATABASE_URL="postgres://dev:dev@localhost:5432/dev"
+export TEST_DATABASE_URL="postgres://test:test@localhost:5431/test"
+```
+If this is your first time creating the database(s), you will need to initialize them by doing the following
+```bash
+(venv) user@machine 4TrackFriday % export FLASK_CONFIG=dev
+(venv) user@machine 4TrackFriday % flask shell
+>>> db.drop_all()
+>>> db.create_all()
+>>> exit()
+(venv) user@machine 4TrackFriday % flask db upgrade
+```
 
 ## Run
 Simply run the following command in your favorite terminal: `ftf_svc`<br/>

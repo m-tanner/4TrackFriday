@@ -9,7 +9,7 @@ from src.app.models import User, Role, Permission, AnonymousUser, Follow
 
 @pytest.fixture(autouse=True)
 def app():
-    app = create_app("testing")
+    app = create_app("test")
     app_context = app.app_context()
     app_context.push()
     yield app
@@ -39,7 +39,8 @@ def test_password_setter():
 def test_no_password_getter():
     user = User(email="forTests@example.com", password="badPassword")
     with pytest.raises(expected_exception=AttributeError):
-        user.password
+        password = user.password
+        assert password
 
 
 def test_password_verification():
@@ -65,8 +66,8 @@ def test_valid_confirmation_token():
 
 
 def test_invalid_confirmation_token():
-    user_one = User(email="forTests@example.com", password="badPassword")
-    user_two = User(email="forTests@example.com", password="goodPassword")
+    user_one = User(email="forTests1@example.com", password="badPassword")
+    user_two = User(email="forTests2@example.com", password="goodPassword")
     db.session.add(user_one)
     db.session.add(user_two)
     db.session.commit()
@@ -188,7 +189,7 @@ def test_anonymous_user():
 
 
 def test_timestamps():
-    user = User(password="cat")
+    user = User(email="forTests@example.com", password="cat")
     db.session.add(user)
     db.session.commit()
     assert (datetime.utcnow() - user.member_since).total_seconds() < 3
@@ -198,7 +199,7 @@ def test_timestamps():
 
 
 def test_ping():
-    user = User(password="cat")
+    user = User(email="forTests@example.com", password="cat")
     db.session.add(user)
     db.session.commit()
     time.sleep(2)
