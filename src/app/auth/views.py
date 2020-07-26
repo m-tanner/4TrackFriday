@@ -11,8 +11,8 @@ from src.app.auth.forms import (
     PasswordResetRequestForm,
     ChangeEmailForm,
 )
-from src.app.sender import send_email
 from src.app.models import User
+from src.app.sender import send_email
 
 
 @auth.before_app_request
@@ -66,6 +66,7 @@ def register():
             email=form.email.data.lower(),
             username=form.username.data,
             password=form.password.data,
+            name=form.name.data,
         )
         db.session.add(user)
         db.session.commit()
@@ -142,9 +143,7 @@ def password_reset_request():
                 user=user,
                 token=token,
             )
-        flash(
-            "An email with instructions to reset your password has been " "sent to you."
-        )
+        flash("An email with instructions to reset your password has been sent to you.")
         return redirect(url_for("auth.login"))
     return render_template("auth/reset_password.html", form=form)
 

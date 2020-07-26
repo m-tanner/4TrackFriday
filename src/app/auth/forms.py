@@ -27,10 +27,18 @@ class RegistrationForm(FlaskForm):
             DataRequired(),
             Length(1, 64),
             Regexp(
-                "^[A-Za-z][A-Za-z0-9_.]*$",
+                "^[A-Za-z][A-Za-z0-9_]*$",
                 0,
-                "Usernames must have only letters, numbers, dots or underscores",
+                "Usernames must have only letters, numbers, or underscores",
             ),
+        ],
+    )
+    name = StringField(
+        "Real Name",
+        validators=[
+            DataRequired(),
+            Length(1, 64),
+            Regexp("^[A-Za-z ]*$", 0, "Real names must have only letters and spaces"),
         ],
     )
     password = PasswordField(
@@ -44,10 +52,12 @@ class RegistrationForm(FlaskForm):
     submit = SubmitField("Register")
 
     def validate_email(self, field):
+        # signature required as is
         if User.query.filter_by(email=field.data.lower()).first():
             raise ValidationError("Email already registered.")
 
     def validate_username(self, field):
+        # signature required as is
         if User.query.filter_by(username=field.data).first():
             raise ValidationError("Username already in use.")
 
@@ -90,5 +100,6 @@ class ChangeEmailForm(FlaskForm):
     submit = SubmitField("Update Email Address")
 
     def validate_email(self, field):
+        # signature required as is
         if User.query.filter_by(email=field.data.lower()).first():
             raise ValidationError("Email already registered.")

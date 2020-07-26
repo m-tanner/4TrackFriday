@@ -4,9 +4,9 @@
 {% block title %}4TF - {{ user.username }}{% endblock %}
 
 {% block page_content %}
-    <div class="page-header">
-        <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}" alt="">
-        <div class="profile-header">
+    <div class="page-header" style="max-width: 720px; margin: 48px auto 0; ">
+        <img class="img-rounded profile-thumbnail" src="{{ user.gravatar(size=256) }}" alt="" style="width: 256px; position: static;">
+        <div class="profile-header" style="margin-left: 0; position: static">
             <h1>{{ user.username }}</h1>
             {% if user.name or user.location %}
                 <p>

@@ -12,10 +12,10 @@ class Config(metaclass=abc.ABCMeta):
     MAIL_PASSWORD = os.getenv("FTF_EMAIL_PASSWORD")
     FTF_MAIL_SUBJECT_PREFIX = "[4TrackFriday]"
     FTF_MAIL_SENDER = f"4TrackFriday Admin <{MAIL_ADDRESS}>"
-    FTF_ADMIN = os.getenv("FTF_EMAIL_ADDRESS")
+    FTF_ADMIN = os.getenv("ADMIN_EMAIL_ADDRESS")
     SQLALCHEMY_TRACK_MODIFICATIONS = False
-    POSTS_PER_PAGE = 20
-    FOLLOWERS_PER_PAGE = 50
+    DEBUG = False
+    TESTING = False
 
     @staticmethod
     def init_app(app):

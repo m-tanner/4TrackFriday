@@ -11,6 +11,13 @@ from src.app.config import config, config_factory
 from src.config_manager import ConfigManager
 from src.fetcher_factory import FetcherFactory
 
+# logging.basicConfig(
+#     format="%(asctime)s %(levelname)-8s %(message)s",
+#     level=logging.INFO,
+#     datefmt="%Y-%m-%d %H:%M:%S",
+# )
+# logger = logging.getLogger(__name__)
+
 bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
@@ -24,7 +31,7 @@ fetcher = FetcherFactory(config=config_manager).get_fetcher()
 
 
 def create_app(config_type: str) -> Flask:
-    app = Flask(__name__, root_path=os.path.join(os.getcwd(), "src/app"))
+    app = Flask(__name__.split(".")[0], root_path=os.path.join(os.getcwd(), "src/app"))
     app_config = config_factory.get_config(config_type)
     app.config.from_object(app_config)
 
