@@ -73,6 +73,8 @@ To have all three running at once, be sure to map non-conflicting ports, i.e.
 `docker run --name ftf_postgres_prod -e POSTGRES_USER=prod -e POSTGRES_PASSWORD=prod -p 5433:5432 -d postgres:latest`
 To connect to shell inside the running container:
 `docker exec -it ftf_postgres_dev /bin/bash`
+OR
+`docker-compose -f src/docker/local_stack.yml up`
 This then requires your bash profile to look like:
 ```bash
 export DATABASE_URL="postgres://prod:prod@localhost:5433/prod"
@@ -88,6 +90,8 @@ If this is your first time creating the database(s), you will need to initialize
 >>> exit()
 (venv) user@machine 4TrackFriday % flask db upgrade
 ```
+7) Set a variable in your environment `CLOUD_PROVIDER` to `AWS` or `gcloud`
+8) Set a variable in your environment for the secret Flask key
 
 ## Run
 Simply run the following command in your favorite terminal: `ftf_svc`<br/>
@@ -106,6 +110,9 @@ This entry point is provided by the `setup.py`.
 3) `docker run --name ftf -p 8080:8080 -e FTF_SECRET_KEY="<some_secret_key>"-e CLOUD_PROVIDER="gcloud" -e GOOGLE_APPLICATION_CREDENTIALS=/path/to/application/credentials -v $GOOGLE_APPLICATION_CREDENTIALS:/path/to/application/credentials -d ftf_web_app:latest`
 4) `docker tag ftf_web_app:latest gcr.io/<CLOUD_PROJECT_NAME>/ftf_web_app`
 5) `docker push gcr.io/<CLOUD_PROJECT_NAME>/ftf_web_app`
+
+## Cloud Functions
+`(venv) mtanner@Michaels-MBP cloud_functions % pip install -r requirements.txt -t .`
 
 ## Deploy
 1) Ensure you have kubectl installed and properly configured with minikube running
