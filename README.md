@@ -132,6 +132,12 @@ This entry point is provided by the `setup.py`.
 2) `kubectl config set-context --current --namespace=production`
 3) `skaffold run` or `skaffold run --trail`, which can be more helpful when troubleshooting
 
+    or for staging
+    
+1) `kubectl config use-context gke...`
+2) `kubectl config set-context --current --namespace=staging`
+3) `skaffold dev` or `skaffold dev --trail`, which can be more helpful when troubleshooting
+
 ## Caveat
 If you would actually like to run, you'll need to get authentication tokens from me, which must
 be on your machine for AWS, Google Cloud, and Heroku to work.
