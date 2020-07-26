@@ -2,7 +2,6 @@ import io
 
 from flask import (
     render_template,
-    session,
     redirect,
     url_for,
     current_app,
@@ -13,47 +12,15 @@ from flask import (
 )
 from flask_login import login_required, current_user
 
-from src.app.decorators import admin_required, permission_required
 from src.app import fetcher, db
-from src.app.sender import send_email
+from src.app.decorators import admin_required, permission_required
 from src.app.main import main
 from src.app.main.forms import (
-    NameForm,
     EditProfileForm,
     EditProfileAdminForm,
     ContactForm,
 )
 from src.app.models import User, Role, Permission
-
-
-@main.route("/user_test", methods=["GET", "POST"])
-def user_test():
-    form = NameForm()
-    if form.validate_on_submit():
-        user = User.query.filter_by(username=form.name.data).first()
-        if user is None:
-            user = User(username=form.name.data)
-            db.session.add(user)
-            db.session.commit()
-            session["known"] = False
-            if current_app.config["FTF_ADMIN"]:
-                send_email(
-                    current_app.config["FTF_ADMIN"],
-                    "New User",
-                    "mail/new_user",
-                    user=user,
-                )
-                pass
-        else:
-            session["known"] = True
-        session["name"] = form.name.data
-        return redirect(url_for(".user_test"))
-    return render_template(
-        "user.html",
-        form=form,
-        name=session.get("name"),
-        known=session.get("known", False),
-    )
 
 
 @main.route("/follow/<username>")
@@ -313,7 +280,7 @@ def show(folder, content):
 def year_one():
     return render_template(
         "playlist.html",
-        content='<script>(function(t,e,s,n){var o,a,c;t.SMCX=t.SMCX||[],e.getElementById(n)||(o=e.getElementsByTagName(s),a=o[o.length-1],c=e.createElement(s),c.type="text/javascript",c.async=!0,c.id=n,c.src="https://widget.surveymonkey.com/collect/website/js/tRaiETqnLgj758hTBazgd_2BNHLyIwmuFE7cezwkskiiyXNdjC0koxkoexplTiSB_2Fg.js",a.parentNode.insertBefore(c,a))})(window,document,"script","smcx-sdk");</script><a style="font: 12px Helvetica, sans-serif; color: #999; text-decoration: none;" href=www.surveymonkey.com> Create your own user feedback survey </a>'
+        content='<script>(function(t,e,s,n){var o,a,c;t.SMCX=t.SMCX||[],e.getElementById(n)||(o=e.getElementsByTagName(s),a=o[o.length-1],c=e.createElement(s),c.type="text/javascript",c.async=!0,c.id=n,c.src="https://widget.surveymonkey.com/collect/website/js/tRaiETqnLgj758hTBazgd_2BNHLyIwmuFE7cezwkskiiyXNdjC0koxkoexplTiSB_2Fg.js",a.parentNode.insertBefore(c,a))})(window,document,"script","smcx-sdk");</script><a style="font: 12px Helvetica, sans-serif; color: #999; text-decoration: none;" href=www.surveymonkey.com> Create your own user feedback survey </a>',
     )
 
 

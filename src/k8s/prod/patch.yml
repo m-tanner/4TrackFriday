@@ -17,3 +17,11 @@ metadata:
 data:
   FLASK_CONFIG: "prod"
   FLASK_ENV: "production"
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ftf-config-map
+data:
+  FLASK_CONFIG: "prod"
+  FLASK_ENV: "production"

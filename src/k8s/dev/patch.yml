@@ -9,3 +9,41 @@ spec:
     spec:
       imagePullSecrets:
         - name: default-token-rhfpx
+      containers:
+        - name: ftf-web-app
+          volumeMounts:
+            - mountPath: /hosthome/creds
+              name: credentials
+      volumes:
+        - name: credentials
+          hostPath:
+            path: /hosthome/creds
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ftf-config-map
+data:
+  FLASK_CONFIG: "dev"
+  FLASK_ENV: "development"
+  GOOGLE_APPLICATION_CREDENTIALS: "/hosthome/creds/four-track-friday-2-159dc1cd7e91.json"
+  DEV_DATABASE_URL: "postgres://dev:dev@localhost:5432/dev"
+      containers:
+        - name: ftf-web-app
+          volumeMounts:
+            - mountPath: /hosthome/creds
+              name: credentials
+      volumes:
+        - name: credentials
+          hostPath:
+            path: /hosthome/creds
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ftf-config-map
+data:
+  FLASK_CONFIG: "dev"
+  FLASK_ENV: "development"
+  GOOGLE_APPLICATION_CREDENTIALS: "/hosthome/creds/four-track-friday-2-159dc1cd7e91.json"
+  DEV_DATABASE_URL: "postgres://dev:dev@localhost:5432/dev"
