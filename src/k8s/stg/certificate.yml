@@ -2,7 +2,8 @@
 apiVersion: networking.gke.io/v1beta1
 kind: ManagedCertificate
 metadata:
-  name: ftf-cert
+  name: ftf-stg-cert
+  namespace: staging
 spec:
   domains:
-    - 4trackfriday.com
+    - stg.4trackfriday.com

@@ -6,6 +6,7 @@ from flask_login import LoginManager
 from flask_mail import Mail
 from flask_moment import Moment
 from flask_sqlalchemy import SQLAlchemy
+from flask_sslify import SSLify
 
 from src.app.config import config, config_factory
 from src.config_manager import ConfigManager
@@ -22,6 +23,7 @@ bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
+sslify = SSLify()
 
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
@@ -42,6 +44,9 @@ def create_app(config_type: str) -> Flask:
     moment.init_app(app)
     db.init_app(app)
     login_manager.init_app(app)
+
+    if app.config['SSL_REDIRECT']:
+        sslify.init_app(app)
 
     from src.app.main import main as main_blueprint
 

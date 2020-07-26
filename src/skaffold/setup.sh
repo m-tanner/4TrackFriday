@@ -1,7 +1,8 @@
 #!/bin/zsh
+# run from project root
+# /bin/zsh  /Users/mtanner/IdeaProjects/4TrackFriday/src/skaffold/setup.sh
 
 find ./src/k8s/base              -type f -exec sed -i "" "s|@CLOUD_PROJECT@|$GCLOUD_PROJECT|g"                                  {} \;
-find ./src/skaffold              -type f -exec sed -i "" "s|@KUBE_CONTEXT@|$GKE_KUBE_CONTEXT|g"                                 {} \;
 find ./tests/container-structure -type f -exec sed -i "" "s|@GOOGLE_APPLICATION_CREDENTIALS@|$GOOGLE_APPLICATION_CREDENTIALS|g" {} \;
 find ./tests/container-structure -type f -exec sed -i "" "s|@CLOUD_PROVIDER@|$CLOUD_PROVIDER|g"                                 {} \;
 find ./tests/container-structure -type f -exec sed -i "" "s|@GCLOUD_PROJECT@|$GCLOUD_PROJECT|g"                                 {} \;

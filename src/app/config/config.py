@@ -16,6 +16,7 @@ class Config(metaclass=abc.ABCMeta):
     SQLALCHEMY_TRACK_MODIFICATIONS = False
     DEBUG = False
     TESTING = False
+    SSL_REDIRECT = False
 
     @staticmethod
     def init_app(app):

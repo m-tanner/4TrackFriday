@@ -7,31 +7,69 @@ spec:
   replicas: 1
   strategy:
     rollingUpdate:
-      maxSurge: 1
-      maxUnavailable: 0
+      maxSurge: 2
+      maxUnavailable: 2
     type: RollingUpdate
   template:
     spec:
       imagePullSecrets:
-        - name: default-token-t9v8q
+        - name: default-token-glr7q
+      containers:
+        - name: ftf-web-app
+          ports:
+            - name: health-port
+              containerPort: 8080
+              hostPort: 8080
+              $patch: delete
+            - name: health-port
+              containerPort: 8080
+              hostPort: 8181
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command:
+            - "/cloud_sql_proxy"
+            # - "-ip_address_types=PRIVATE"
+            - "-instances=four-track-friday-2:us-west1:ftf-stg-pg=tcp:5432"
+            - "-credential_file=/secrets/service_account.json"
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - name: ftf-pg-creds
+              mountPath: /secrets/
+              readOnly: true
+      volumes:
+        - name: ftf-pg-creds
+          secret:
+            # kubectl create secret generic ftf-pg-creds --from-file=service_account.json=/path/to/creds.json
+            secretName: ftf-pg-creds
 ---
 kind: ConfigMap
 apiVersion: v1
 metadata:
   name: ftf-config-map
 data:
-  FLASK_CONFIG: "prod"
+  FLASK_CONFIG: "stg"
   FLASK_ENV: "production"
 ---
-kind: Ingress
 apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
 metadata:
   name: ftf-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: ftf-stg-ip
+    networking.gke.io/managed-certificates: ftf-stg-cert
 spec:
-  rules:
-    - host: stg.4trackfriday.com
-      http:
-        paths:
-          - backend:
-              serviceName: ftf-service
-              servicePort: 8080
+  backend:
+    servicePort: 8181
+---
+kind: Service
+apiVersion: v1
+metadata:
+  name: ftf-service
+spec:
+  ports:
+    - port: 8080
+      $patch: delete
+    - name: web-node
+      port: 8181
+      targetPort: 8181

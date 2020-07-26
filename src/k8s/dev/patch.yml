@@ -31,14 +31,5 @@ metadata:
 data:
   FLASK_CONFIG: "dev"
   FLASK_ENV: "development"
-  GOOGLE_APPLICATION_CREDENTIALS: "/Users/mtanner/<path to creds json>"
+  GOOGLE_APPLICATION_CREDENTIALS: "/Users/mtanner/<path to creds>.json"
   DEV_DATABASE_URL: "postgres://dev:dev@host.docker.internal:5432/dev"
----
-apiVersion: networking.k8s.io/v1beta1
-kind: Ingress
-metadata:
-  name: ftf-ingress
-spec:
-  backend:
-    serviceName: ftf-service
-    servicePort: 8080

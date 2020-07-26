@@ -1,7 +1,7 @@
 import os
 
 import click
-from flask_migrate import Migrate
+from flask_migrate import Migrate, upgrade
 
 from src.app import create_app, db
 from src.app.models import User, Role, Permission, Follow
@@ -24,3 +24,16 @@ def test(pytest_arg):
         pytest.main(["-x", "-s", "-v", "--disable-pytest-warnings", "tests/"])
     else:
         pytest.main([f"tests/{str(pytest_arg[0])}"])
+
+
+@app.cli.command()
+def deploy():
+    """Run deployment tasks."""
+    # migrate database to latest revision
+    upgrade()
+
+    # create or update user roles
+    Role.insert_roles()
+
+    # ensure all users are following themselves
+    User.add_self_follows()

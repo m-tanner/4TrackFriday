@@ -35,9 +35,3 @@ commandTests:
     command: "which"
     args: ["python"]
     expectedOutput: ["/usr/local/bin/python\n"]
-
-  # check that all the tests pass
-  - name: "pytest"
-    command: "pytest"
-    envVars:
-    args: ["tests/", "-s", "-v", "--disable-pytest-warnings"]
