@@ -79,6 +79,7 @@ def register():
             token=token,
         )
         flash("A confirmation email has been sent to you by email.")
+        # FIXME this needs to redirect to the logged in state
         return redirect(url_for("auth.login"))
     return render_template("auth/register.html", form=form)
 

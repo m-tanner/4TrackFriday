@@ -19,7 +19,7 @@ test:
       - tests/test_commands.yml
       - tests/test_metadata.yml
 profiles:
-  - name: profile-dev
+  - name: profile-docker-desktop
     build:
       local:
         push: false
@@ -27,9 +27,9 @@ profiles:
       kustomize:
         paths:
           - src/k8s/dev
-      kubeContext: minikube
+      kubeContext: docker-desktop
     activation:
-      - kubeContext: minikube
+      - kubeContext: docker-desktop
   - name: profile-prod
     build:
       local:

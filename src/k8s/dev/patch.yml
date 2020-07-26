@@ -17,12 +17,12 @@ spec:
       containers:
         - name: ftf-web-app
           volumeMounts:
-            - mountPath: /hosthome/creds
+            - mountPath: /Users/mtanner
               name: credentials
       volumes:
         - name: credentials
           hostPath:
-            path: /hosthome/creds
+            path: /Users/mtanner
 ---
 kind: ConfigMap
 apiVersion: v1
@@ -31,24 +31,14 @@ metadata:
 data:
   FLASK_CONFIG: "dev"
   FLASK_ENV: "development"
-  GOOGLE_APPLICATION_CREDENTIALS: "/hosthome/creds/four-track-friday-2-159dc1cd7e91.json"
-  DEV_DATABASE_URL: "postgres://dev:dev@localhost:5432/dev"
-      containers:
-        - name: ftf-web-app
-          volumeMounts:
-            - mountPath: /hosthome/creds
-              name: credentials
-      volumes:
-        - name: credentials
-          hostPath:
-            path: /hosthome/creds
+  GOOGLE_APPLICATION_CREDENTIALS: "/Users/mtanner/<path to creds json>"
+  DEV_DATABASE_URL: "postgres://dev:dev@host.docker.internal:5432/dev"
 ---
-kind: ConfigMap
-apiVersion: v1
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
 metadata:
-  name: ftf-config-map
-data:
-  FLASK_CONFIG: "dev"
-  FLASK_ENV: "development"
-  GOOGLE_APPLICATION_CREDENTIALS: "/hosthome/creds/four-track-friday-2-159dc1cd7e91.json"
-  DEV_DATABASE_URL: "postgres://dev:dev@localhost:5432/dev"
+  name: ftf-ingress
+spec:
+  backend:
+    serviceName: ftf-service
+    servicePort: 8080

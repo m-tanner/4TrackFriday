@@ -1,7 +1,10 @@
 version: '3.8'
 
 services:
-
+  # This will give you everything you need locally to
+  # store data for test and dev environments
+  # the dev environment is meant to be hosted in kubernetes on docker-desktop
+  # the test environment is for python unit tests
   dev_db:
     container_name: ftf_postgres_dev
     image: postgres
@@ -23,6 +26,13 @@ services:
       POSTGRES_USER: test
 
   adminer:
+    # login like so
+    # system: PostgreSQL
+    # server: ftf_postgres_dev
+    # username: dev
+    # password: dev
+    # database: dev
+    # swap for test as desired
     image: adminer
     restart: always
     ports:
