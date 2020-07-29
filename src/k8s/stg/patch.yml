@@ -16,14 +16,6 @@ spec:
         - name: default-token-glr7q
       containers:
         - name: ftf-web-app
-          ports:
-            - name: health-port
-              containerPort: 8080
-              hostPort: 8080
-              $patch: delete
-            - name: health-port
-              containerPort: 8080
-              hostPort: 8181
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
           command:
@@ -58,18 +50,3 @@ metadata:
   annotations:
     kubernetes.io/ingress.global-static-ip-name: ftf-stg-ip
     networking.gke.io/managed-certificates: ftf-stg-cert
-spec:
-  backend:
-    servicePort: 8181
----
-kind: Service
-apiVersion: v1
-metadata:
-  name: ftf-service
-spec:
-  ports:
-    - port: 8080
-      $patch: delete
-    - name: web-node
-      port: 8181
-      targetPort: 8181

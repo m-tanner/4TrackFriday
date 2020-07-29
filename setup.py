@@ -19,7 +19,7 @@ install_requirements = [
     "google-cloud-storage",
     "pytz",
     "pymysql",
-    "pyscopg2",
+    "psycopg2",
     # "psycopg2-binary",  # binary required for local mac
     "flask-login",
     "werkzeug",

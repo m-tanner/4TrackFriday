@@ -23,7 +23,7 @@ bootstrap = Bootstrap()
 mail = Mail()
 moment = Moment()
 db = SQLAlchemy()
-sslify = SSLify()
+# sslify = SSLify()
 
 login_manager = LoginManager()
 login_manager.login_view = "auth.login"
@@ -45,8 +45,8 @@ def create_app(config_type: str) -> Flask:
     db.init_app(app)
     login_manager.init_app(app)
 
-    if app.config['SSL_REDIRECT']:
-        sslify.init_app(app)
+    # if app.config['SSL_REDIRECT']:
+    #     sslify.init_app(app)
 
     from src.app.main import main as main_blueprint
 

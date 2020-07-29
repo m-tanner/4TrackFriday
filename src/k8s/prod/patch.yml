@@ -16,14 +16,6 @@ spec:
         - name: default-token-t9v8q
       containers:
         - name: ftf-web-app
-          ports:
-            - name: health-port
-              containerPort: 8080
-              hostPort: 8080
-              $patch: delete
-            - name: health-port
-              containerPort: 8080
-              hostPort: 8181
         - name: cloud-sql-proxy
           image: gcr.io/cloudsql-docker/gce-proxy:1.17
           command:
