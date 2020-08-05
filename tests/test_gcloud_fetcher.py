@@ -3,7 +3,7 @@ from src.episode import Episode
 from src.gcloud_fetcher import GCloudFetcher
 
 
-def test_aws_fetcher():
+def test_gcloud_fetcher():
     episode_fetcher = GCloudFetcher(config=ConfigManager())
 
     episodes = episode_fetcher.fetch_all()

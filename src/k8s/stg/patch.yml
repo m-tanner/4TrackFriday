@@ -1,0 +1,52 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: ftf-deployment
+spec:
+  replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 2
+      maxUnavailable: 2
+    type: RollingUpdate
+  template:
+    spec:
+      imagePullSecrets:
+        - name: default-token-glr7q
+      containers:
+        - name: ftf-web-app
+        - name: cloud-sql-proxy
+          image: gcr.io/cloudsql-docker/gce-proxy:1.17
+          command:
+            - "/cloud_sql_proxy"
+            # - "-ip_address_types=PRIVATE"
+            - "-instances=four-track-friday-2:us-west1:ftf-stg-pg=tcp:5432"
+            - "-credential_file=/secrets/service_account.json"
+          securityContext:
+            runAsNonRoot: true
+          volumeMounts:
+            - name: ftf-pg-creds
+              mountPath: /secrets/
+              readOnly: true
+      volumes:
+        - name: ftf-pg-creds
+          secret:
+            # kubectl create secret generic ftf-pg-creds --from-file=service_account.json=/path/to/creds.json
+            secretName: ftf-pg-creds
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ftf-config-map
+data:
+  FLASK_CONFIG: "stg"
+  FLASK_ENV: "production"
+---
+apiVersion: networking.k8s.io/v1beta1
+kind: Ingress
+metadata:
+  name: ftf-ingress
+  annotations:
+    kubernetes.io/ingress.global-static-ip-name: ftf-stg-ip
+    networking.gke.io/managed-certificates: ftf-stg-cert

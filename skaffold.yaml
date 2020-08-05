@@ -4,7 +4,7 @@ metadata:
   name: ftf-skaffold
 build:
   artifacts:
-    - image: gcr.io/@CLOUD_PROJECT_NAME@/ftf_web_app
+    - image: gcr.io/four-track-friday-2/ftf_web_app
       context: .
       docker:
         dockerfile: src/docker/Dockerfile
@@ -14,12 +14,12 @@ build:
     gitCommit: {}
   local: {}
 test:
-  - image: gcr.io/@CLOUD_PROJECT_NAME@/ftf_web_app
+  - image: gcr.io/four-track-friday-2/ftf_web_app
     structureTests:
-      - tests/test_commands.yml
-      - tests/test_metadata.yml
+      - tests/container-structure/test_commands.yml
+      - tests/container-structure/test_metadata.yml
 profiles:
-  - name: profile-dev
+  - name: profile-docker-desktop
     build:
       local:
         push: false
@@ -27,9 +27,20 @@ profiles:
       kustomize:
         paths:
           - src/k8s/dev
-      kubeContext: minikube
+      kubeContext: "docker-desktop"
     activation:
-      - kubeContext: minikube
+      - kubeContext: "docker-desktop"
+  - name: profile-stg
+    build:
+      local:
+        push: true
+    deploy:
+      kustomize:
+        paths:
+          - src/k8s/stg
+      kubeContext: "staging"
+    activation:
+      - kubeContext: "staging"
   - name: profile-prod
     build:
       local:
@@ -38,6 +49,6 @@ profiles:
       kustomize:
         paths:
           - src/k8s/prod
-      kubeContext: "@KUBE_CONTEXT@"
+      kubeContext: "production"
     activation:
-      - kubeContext: "@KUBE_CONTEXT@"
+      - kubeContext: "production"

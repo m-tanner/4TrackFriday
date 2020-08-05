@@ -153,3 +153,11 @@ dmypy.json
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+skaffold.yaml
+/skaffold
+/terraform
+/k8s
+/docker
+/cloud_functions
+/tests

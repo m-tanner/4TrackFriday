@@ -9,38 +9,46 @@ spec:
   selector:
     matchLabels:
       app: ftf-web-app
-  strategy:
-    rollingUpdate:
-      maxSurge: 25%
-      maxUnavailable: 25%
-    type: RollingUpdate
   template:
     spec:
       imagePullSecrets:
         - name: ftf-secret
       containers:
         - name: ftf-web-app
-          image: "gcr.io/@CLOUD_PROJECT_NAME@/ftf_web_app"
+          image: "gcr.io/four-track-friday-2/ftf_web_app"
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:
                 name: ftf-secret
             - configMapRef:
                 name: ftf-config-map
-          livenessProbe:
-            httpGet:
-              port: 8080
-              path: /health
-            initialDelaySeconds: 60
-            timeoutSeconds: 1
           ports:
-            - containerPort: 8080
+            - name: health-port
+              containerPort: 8080
+          startupProbe:
+            httpGet:
+              port: health-port
+              path: /health
+            failureThreshold: 30
+            periodSeconds: 10
           readinessProbe:
             httpGet:
-              port: 8080
+              port: health-port
               path: /health
-            initialDelaySeconds: 60
+            initialDelaySeconds: 10
             timeoutSeconds: 1
+            periodSeconds: 10
+            failureThreshold: 6
+            successThreshold: 1
+          livenessProbe:
+            httpGet:
+              port: health-port
+              path: /health
+            initialDelaySeconds: 15
+            timeoutSeconds: 1
+            periodSeconds: 10
+            failureThreshold: 6
+            successThreshold: 1
           resources:
             limits:
               cpu: 500m

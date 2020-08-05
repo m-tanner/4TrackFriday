@@ -1,8 +1,0 @@
----
-apiVersion: networking.gke.io/v1beta1
-kind: ManagedCertificate
-metadata:
-  name: ftf-cert
-spec:
-  domains:
-    - 4trackfriday.com

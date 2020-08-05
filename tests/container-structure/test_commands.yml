@@ -1,0 +1,37 @@
+schemaVersion: '2.0.0'
+
+globalEnvVars:
+  - key: "GOOGLE_APPLICATION_CREDENTIALS"
+    value: "@GOOGLE_APPLICATION_CREDENTIALS@"
+  - key: "CLOUD_PROVIDER"
+    value: "@CLOUD_PROVIDER@"
+  - key: "GCLOUD_PROJECT"
+    value: "@GCLOUD_PROJECT@"
+  - key: "STATIC_4TF_BUCKET"
+    value: "@STATIC_4TF_BUCKET@"
+  - key: "TEST_DATABASE_URL"
+    value: "@TEST_DATABASE_URL@"
+  - key: "FTF_EMAIL_ADDRESS"
+    value: "@FTF_EMAIL_ADDRESS@"
+  - key: "FTF_EMAIL_PASSWORD"
+    value: "@FTF_EMAIL_PASSWORD@"
+  - key: "ADMIN_EMAIL_ADDRESS"
+    value: "@ADMIN_EMAIL_ADDRESS@"
+  - key: "FLASK_CONFIG"
+    value: "@FLASK_CONFIG@"
+  - key: "FLASK_ENV"
+    value: "@FLASK_CONFIG@elopement"
+  - key: "FLASK_DEBUG"
+    value: "@FLASK_DEBUG@"
+  - key: "FLASK_APP"
+    value: "@FLASK_APP@"
+  - key: "FTF_SECRET_KEY"
+    value: "@FTF_SECRET_KEY@"
+
+commandTests:
+
+  # check that the python binary is in the correct location
+  - name: "python installation"
+    command: "which"
+    args: ["python"]
+    expectedOutput: ["/usr/local/bin/python\n"]

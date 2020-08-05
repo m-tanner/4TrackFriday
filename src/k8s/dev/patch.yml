@@ -5,7 +5,31 @@ metadata:
   name: ftf-deployment
 spec:
   replicas: 1
+  strategy:
+    rollingUpdate:
+      maxSurge: 1
+      maxUnavailable: 2
+    type: RollingUpdate
   template:
     spec:
       imagePullSecrets:
         - name: default-token-rhfpx
+      containers:
+        - name: ftf-web-app
+          volumeMounts:
+            - mountPath: /Users/mtanner
+              name: credentials
+      volumes:
+        - name: credentials
+          hostPath:
+            path: /Users/mtanner
+---
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: ftf-config-map
+data:
+  FLASK_CONFIG: "dev"
+  FLASK_ENV: "development"
+  GOOGLE_APPLICATION_CREDENTIALS: "/Users/mtanner/<path to creds>.json"
+  DEV_DATABASE_URL: "postgres://dev:dev@host.docker.internal:5432/dev"

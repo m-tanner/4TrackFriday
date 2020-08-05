@@ -15,12 +15,14 @@
 
 {% block head %}
     {{ super() }}
-    <link rel="shortcut icon" href="/icon" type="image/x-icon">
-    <link rel="icon" href="/icon" type="image/x-icon">
+    <link rel="shortcut icon" href="{{ url_for("main.icon") }}" type="image/x-icon">
+    <link rel="icon" href="{{ url_for("main.icon") }}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{{ url_for("static", filename="styles.css") }}">
 {% endblock %}
 
 {% block navbar %}
-    <div class="navbar navbar-inverse" role="navigation" style="font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; font-weight: 400; line-height: 28px; margin: 0 auto;">
+    <div class="navbar navbar-inverse" role="navigation"
+         style="font-family: 'Avenir Next', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'; font-size: 18px; font-weight: 400; line-height: 28px; margin: 0 auto;">
         <div class="container">
             <div class="navbar-header">
                 <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -33,14 +35,14 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li><a href="/past">Past Episodes</a></li>
+                    <li><a href="{{ url_for("main.past") }}">Past Episodes</a></li>
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             About <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/about">Origin Story</a></li>
-                            <li><a href="/advert" target="_blank">Poster</a></li>
+                            <li><a href="{{ url_for("main.about") }}">Origin Story</a></li>
+                            <li><a href="{{ url_for("main.advert") }}" target="_blank">Poster</a></li>
                         </ul>
                     </li>
                     <li class="dropdown">
@@ -48,11 +50,31 @@
                             Music <b class="caret"></b>
                         </a>
                         <ul class="dropdown-menu">
-                            <li><a href="/spotify">Spotify</a></li>
-                            <li><a href="/apple">Apple Music</a></li>
-                            <li><a href="/stats">By the Numbers</a></li>
+                            <li><a href="{{ url_for("main.spotify") }}">Spotify</a></li>
+                            <li><a href="{{ url_for("main.apple") }}">Apple Music</a></li>
+                            <li><a href="{{ url_for("main.stats") }}">By the Numbers</a></li>
                         </ul>
                     </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    {% if current_user.is_authenticated %}
+                        <li class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                                <img src="{{ current_user.gravatar(size=18) }}" alt="">
+                                Account <b class="caret"></b>
+                            </a>
+                            <ul class="dropdown-menu">
+                                {% if current_user.is_authenticated %}
+                                    <li><a href="{{ url_for("main.user", username=current_user.username) }}">Profile</a></li>
+                                {% endif %}
+                                <li><a href="{{ url_for("auth.change_password") }}">Change Password</a></li>
+                                <li><a href="{{ url_for("auth.change_email_request") }}">Change Email</a></li>
+                                <li><a href="{{ url_for("auth.logout") }}">Log Out</a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li><a href="{{ url_for("auth.login") }}">Log In</a></li>
+                    {% endif %}
                 </ul>
             </div>
         </div>
@@ -61,6 +83,13 @@
 
 {% block content %}
     <div class="container">
+        {% for message in get_flashed_messages() %}
+            <div class="alert alert-warning">
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+                {{ message }}
+            </div>
+        {% endfor %}
+
         {% block page_content %}{% endblock %}
     </div>
 {% endblock %}
@@ -75,4 +104,6 @@
         gtag('js', new Date());
         gtag('config', 'UA-163853319-1');
     </script>
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
 {% endblock %}
