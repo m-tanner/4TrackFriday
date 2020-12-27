@@ -54,13 +54,13 @@ This entry point is provided by the `setup.py`.
 ## Use Skaffold to Build, Test, and Deploy
 1) `kubectl config use-context minikube`
 2) `kubectl config set-context --current --namespace=development`
-3) `skaffold run --trail` 
+3) `skaffold run --tail` 
 
     or 
 
 1) `kubectl config use-context gke...`
 2) `kubectl config set-context --current --namespace=production`
-3) `skaffold run` or `skaffold run --trail`, which can be more helpful when troubleshooting
+3) `skaffold run` or `skaffold run --tail`, which can be more helpful when troubleshooting
 
 ## Caveat
 If you would actually like this to run for you, you'll need to get authentication tokens from me, which must

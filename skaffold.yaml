@@ -1,4 +1,4 @@
-apiVersion: skaffold/v2beta1
+apiVersion: skaffold/v2beta10
 kind: Config
 metadata:
   name: ftf-skaffold
@@ -38,6 +38,6 @@ profiles:
       kustomize:
         paths:
           - src/k8s/prod
-      kubeContext: "@KUBE_CONTEXT@"
+      kubeContext: production
     activation:
-      - kubeContext: "@KUBE_CONTEXT@"
+      - kubeContext: production
