@@ -20,7 +20,7 @@ spec:
         - name: ftf-secret
       containers:
         - name: ftf-web-app
-          image: "gcr.io/@CLOUD_PROJECT_NAME@/ftf_web_app"
+          image: "gcr.io/four-track-friday-2/ftf_web_app"
           imagePullPolicy: IfNotPresent
           envFrom:
             - secretRef:

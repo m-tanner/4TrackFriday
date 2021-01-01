@@ -1,0 +1,13 @@
+runtime: python37
+
+instance_class: F1
+automatic_scaling:
+  max_instances: 1
+
+entrypoint: "ftf_svc"
+
+env_variables:
+  CLOUD_PROVIDER: "gcloud"
+  FTF_SECRET_KEY: { { manually fill out at deploy time } }
+  GCLOUD_PROJECT: "four-track-friday-2"
+  STATIC_4TF_BUCKET: "static.4trackfriday.com"
