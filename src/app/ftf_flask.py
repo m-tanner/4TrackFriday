@@ -64,7 +64,7 @@ def artist_media(content):
 @app.route("/icon", methods=["GET"])
 def icon():
     return send_file(
-        io.BytesIO(fetcher.fetch_icon("icons/4TF-10.svg")), mimetype="image/svg+xml",
+        io.BytesIO(fetcher.fetch_icon("icons/4TF-token.svg")), mimetype="image/svg+xml",
     )
 
 
