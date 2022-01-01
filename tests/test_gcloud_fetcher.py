@@ -1,10 +1,10 @@
 from src.config_manager import ConfigManager
 from src.episode import Episode
-from src.gcloud_fetcher import GCloudFetcher
+from src.gcloud_fetcher import GCloudCloudFetcher
 
 
 def test_aws_fetcher():
-    episode_fetcher = GCloudFetcher(config=ConfigManager())
+    episode_fetcher = GCloudCloudFetcher(config=ConfigManager())
 
     episodes = episode_fetcher.fetch_all()
     assert isinstance(episodes, list)

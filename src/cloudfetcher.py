@@ -4,7 +4,7 @@ from typing import List
 from src.episode import Episode
 
 
-class Fetcher(metaclass=abc.ABCMeta):
+class CloudFetcher(metaclass=abc.ABCMeta):
     @abc.abstractmethod
     def fetch_about(self, about_key: str) -> bytes:
         raise NotImplementedError

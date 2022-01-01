@@ -5,7 +5,8 @@ from flask import Flask, render_template, send_file
 from flask_bootstrap import Bootstrap
 
 from src.config_manager import ConfigManager
-from src.fetcher_factory import FetcherFactory
+from src.fetcher_factory import CloudFetcherFactory
+from src.statistics_fetcher import StatisticsFetcher
 
 app = Flask(__name__, root_path=os.path.join(os.getcwd(), "src/app"))
 app.config["SECRET_KEY"] = os.environ["FTF_SECRET_KEY"]
@@ -13,7 +14,8 @@ app.config["SECRET_KEY"] = os.environ["FTF_SECRET_KEY"]
 bootstrap = Bootstrap(app)
 
 config_manager = ConfigManager()
-fetcher = FetcherFactory(config=config_manager).get_fetcher()
+cloud_fetcher = CloudFetcherFactory(config=config_manager).get_cloud_fetcher()
+metrics_fetcher = StatisticsFetcher(config=config_manager)
 
 
 @app.errorhandler(404)
@@ -28,13 +30,16 @@ def internal_server_error(e):
 
 @app.route("/", methods=["GET"])
 def index():
-    most_recent_episode = fetcher.fetch_most_recent()
+    most_recent_episode = cloud_fetcher.fetch_most_recent()
     return render_template("episode.html", content=most_recent_episode.content)
 
 
 @app.route("/stats", methods=["GET"])
 def stats():
-    metrics = fetcher.fetch_metrics("playlist_stats/metrics.json")
+    metrics = metrics_fetcher.fetch_metrics("720360kMd4LiSAVzyA8Ft4")
+    metrics.pop("info", None)
+    # TODO use the info differently than the rest
+    # TODO get the popularity (separate logic required in the scala service)
     return render_template("charts.html", metrics=metrics)
 
 
@@ -57,47 +62,47 @@ def apple():
 @app.route("/artist_media/<content>", methods=["GET"])
 def artist_media(content):
     return send_file(
-        io.BytesIO(fetcher.fetch_icon(f"artist_media/{content}")), mimetype="image/jpg",
+        io.BytesIO(cloud_fetcher.fetch_icon(f"artist_media/{content}")), mimetype="image/jpg",
     )
 
 
 @app.route("/icon", methods=["GET"])
 def icon():
     return send_file(
-        io.BytesIO(fetcher.fetch_icon("icons/4TF-token.svg")), mimetype="image/svg+xml",
+        io.BytesIO(cloud_fetcher.fetch_icon("icons/4TF-token.svg")), mimetype="image/svg+xml",
     )
 
 
 @app.route("/logo", methods=["GET"])
 def logo():
     return send_file(
-        io.BytesIO(fetcher.fetch_icon("icons/4TF-10.png")), mimetype="image/png",
+        io.BytesIO(cloud_fetcher.fetch_icon("icons/4TF-10.png")), mimetype="image/png",
     )
 
 
 @app.route("/advert", methods=["GET"])
 def advert():
     return send_file(
-        io.BytesIO(fetcher.fetch_icon("mVBF8F0.png")), mimetype="image/png",
+        io.BytesIO(cloud_fetcher.fetch_icon("mVBF8F0.png")), mimetype="image/png",
     )
 
 
 @app.route("/about", methods=["GET"])
 def about():
     return render_template(
-        "about.html", content=fetcher.fetch_about(about_key="about.html")
+        "about.html", content=cloud_fetcher.fetch_about(about_key="about.html")
     )
 
 
 @app.route("/past", methods=["GET"])
 def past():
-    past_episodes = fetcher.fetch_all()
+    past_episodes = cloud_fetcher.fetch_all()
     return render_template("past.html", past_episodes=past_episodes)
 
 
 @app.route("/show/<folder>/<content>", methods=["GET"])
 def show(folder, content):
-    html_string = fetcher.fetch_string_content(f"{folder}/{content}")
+    html_string = cloud_fetcher.fetch_metrics(f"{folder}/{content}")
     return render_template("episode.html", content=html_string)
 
 

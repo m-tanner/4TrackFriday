@@ -2,12 +2,12 @@ from typing import List
 
 import boto3
 
+from src.cloudfetcher import CloudFetcher
 from src.config_manager import ConfigManager
 from src.episode import Episode
-from src.fetcher import Fetcher
 
 
-class AWSFetcher(Fetcher):
+class AWSCloudFetcher(CloudFetcher):
     def __init__(self, config: ConfigManager):
         self.s3 = boto3.client("s3")
         self.bucket_name = config.static_4tf_bucket

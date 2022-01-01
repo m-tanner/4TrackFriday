@@ -5,12 +5,12 @@ from typing import List, Dict
 import pytz
 from google.cloud import storage
 
+from src.cloudfetcher import CloudFetcher
 from src.config_manager import ConfigManager
 from src.episode import Episode
-from src.fetcher import Fetcher
 
 
-class GCloudFetcher(Fetcher):
+class GCloudCloudFetcher(CloudFetcher):
     def __init__(self, config: ConfigManager):
         self.client = storage.Client(project=config.gcloud_project)
         self.bucket_name = config.static_4tf_bucket
