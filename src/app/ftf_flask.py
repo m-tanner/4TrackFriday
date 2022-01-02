@@ -1,9 +1,10 @@
 import io
 import os
 
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template, send_file, redirect, url_for
 from flask_bootstrap import Bootstrap
 
+from src.app.main.forms import PlaylistSubmissionForm
 from src.config_manager import ConfigManager
 from src.fetcher_factory import CloudFetcherFactory
 from src.statistics_fetcher import StatisticsFetcher
@@ -35,12 +36,30 @@ def index():
 
 
 @app.route("/stats", methods=["GET"])
-def stats():
-    metrics = metrics_fetcher.fetch_metrics("720360kMd4LiSAVzyA8Ft4")
-    metrics.pop("info", None)
+def default_stats():
+    return redirect(url_for(".stats", playlist_id="720360kMd4LiSAVzyA8Ft4"))
+
+
+@app.route("/stats/<playlist_id>", methods=["GET"])
+def stats(playlist_id: str):
+    metrics = metrics_fetcher.fetch_metrics(playlist_id)
+    info = metrics.pop("info", None)
     # TODO use the info differently than the rest
     # TODO get the popularity (separate logic required in the scala service)
-    return render_template("charts.html", metrics=metrics)
+    return render_template("charts.html", metrics=metrics, info=info)
+
+
+@app.route("/analyze", methods=["GET", "POST"])
+def analyze_from_user():
+    # playlist_link is what comes from spotify's "copy link to playlist"
+    form = PlaylistSubmissionForm()
+    if form.validate_on_submit() and form.is_spotify_url(form.submission):
+        submission: str = form.submission.data
+        split_submission = submission.split("/")
+        playlist_id_with_query_string = split_submission[-1]
+        playlist_id = playlist_id_with_query_string.split("?")[0]
+        return redirect(url_for(".stats", playlist_id=playlist_id))
+    return render_template("analyze.html", form=form)
 
 
 @app.route("/spotify", methods=["GET"])
