@@ -13,5 +13,11 @@ class StatisticsFetcher:
         response = requests.get(
             f"{self.metrics_service_url}/{playlist_id}"
         )
-        # TODO add error handling
+        if response.status_code != 200:
+            # TODO add real error handling
+            # TODO or fix the cold start problem
+            # cold start sometimes means this takes two tries
+            response = requests.get(
+                f"{self.metrics_service_url}/{playlist_id}"
+            )
         return response.json()
