@@ -121,7 +121,7 @@ def past():
 
 @app.route("/show/<folder>/<content>", methods=["GET"])
 def show(folder, content):
-    html_string = cloud_fetcher.fetch_metrics(f"{folder}/{content}")
+    html_string = cloud_fetcher.fetch_string_content(f"{folder}/{content}")
     return render_template("episode.html", content=html_string)
 
 
