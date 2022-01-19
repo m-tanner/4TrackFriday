@@ -1,11 +1,13 @@
 import io
 import os
 
-from flask import Flask, render_template, send_file
+from flask import Flask, render_template, send_file, redirect, url_for
 from flask_bootstrap import Bootstrap
 
+from src.app.main.forms import PlaylistSubmissionForm
 from src.config_manager import ConfigManager
-from src.fetcher_factory import FetcherFactory
+from src.fetcher_factory import CloudFetcherFactory
+from src.statistics_fetcher import StatisticsFetcher
 
 app = Flask(__name__, root_path=os.path.join(os.getcwd(), "src/app"))
 app.config["SECRET_KEY"] = os.environ["FTF_SECRET_KEY"]
@@ -13,7 +15,8 @@ app.config["SECRET_KEY"] = os.environ["FTF_SECRET_KEY"]
 bootstrap = Bootstrap(app)
 
 config_manager = ConfigManager()
-fetcher = FetcherFactory(config=config_manager).get_fetcher()
+cloud_fetcher = CloudFetcherFactory(config=config_manager).get_cloud_fetcher()
+metrics_fetcher = StatisticsFetcher(config=config_manager)
 
 
 @app.errorhandler(404)
@@ -28,14 +31,35 @@ def internal_server_error(e):
 
 @app.route("/", methods=["GET"])
 def index():
-    most_recent_episode = fetcher.fetch_most_recent()
+    most_recent_episode = cloud_fetcher.fetch_most_recent()
     return render_template("episode.html", content=most_recent_episode.content)
 
 
 @app.route("/stats", methods=["GET"])
-def stats():
-    metrics = fetcher.fetch_metrics("playlist_stats/metrics.json")
-    return render_template("charts.html", metrics=metrics)
+def default_stats():
+    return redirect(url_for(".stats", playlist_id="720360kMd4LiSAVzyA8Ft4"))
+
+
+@app.route("/stats/<playlist_id>", methods=["GET"])
+def stats(playlist_id: str):
+    metrics = metrics_fetcher.fetch_metrics(playlist_id)
+    info = metrics.pop("info", None)
+    # TODO use the info differently than the rest
+    # TODO get the popularity (separate logic required in the scala service)
+    return render_template("charts.html", metrics=metrics, info=info)
+
+
+@app.route("/analyze", methods=["GET", "POST"])
+def analyze_from_user():
+    # playlist_link is what comes from spotify's "copy link to playlist"
+    form = PlaylistSubmissionForm()
+    if form.validate_on_submit() and form.is_spotify_url(form.submission):
+        submission: str = form.submission.data
+        split_submission = submission.split("/")
+        playlist_id_with_query_string = split_submission[-1]
+        playlist_id = playlist_id_with_query_string.split("?")[0]
+        return redirect(url_for(".stats", playlist_id=playlist_id))
+    return render_template("analyze.html", form=form)
 
 
 @app.route("/spotify", methods=["GET"])
@@ -57,47 +81,47 @@ def apple():
 @app.route("/artist_media/<content>", methods=["GET"])
 def artist_media(content):
     return send_file(
-        io.BytesIO(fetcher.fetch_icon(f"artist_media/{content}")), mimetype="image/jpg",
+        io.BytesIO(cloud_fetcher.fetch_icon(f"artist_media/{content}")), mimetype="image/jpg",
     )
 
 
 @app.route("/icon", methods=["GET"])
 def icon():
     return send_file(
-        io.BytesIO(fetcher.fetch_icon("icons/4TF-token.svg")), mimetype="image/svg+xml",
+        io.BytesIO(cloud_fetcher.fetch_icon("icons/4TF-token.svg")), mimetype="image/svg+xml",
     )
 
 
 @app.route("/logo", methods=["GET"])
 def logo():
     return send_file(
-        io.BytesIO(fetcher.fetch_icon("icons/4TF-10.png")), mimetype="image/png",
+        io.BytesIO(cloud_fetcher.fetch_icon("icons/4TF-10.png")), mimetype="image/png",
     )
 
 
 @app.route("/advert", methods=["GET"])
 def advert():
     return send_file(
-        io.BytesIO(fetcher.fetch_icon("mVBF8F0.png")), mimetype="image/png",
+        io.BytesIO(cloud_fetcher.fetch_icon("mVBF8F0.png")), mimetype="image/png",
     )
 
 
 @app.route("/about", methods=["GET"])
 def about():
     return render_template(
-        "about.html", content=fetcher.fetch_about(about_key="about.html")
+        "about.html", content=cloud_fetcher.fetch_about(about_key="about.html")
     )
 
 
 @app.route("/past", methods=["GET"])
 def past():
-    past_episodes = fetcher.fetch_all()
+    past_episodes = cloud_fetcher.fetch_all()
     return render_template("past.html", past_episodes=past_episodes)
 
 
 @app.route("/show/<folder>/<content>", methods=["GET"])
 def show(folder, content):
-    html_string = fetcher.fetch_string_content(f"{folder}/{content}")
+    html_string = cloud_fetcher.fetch_metrics(f"{folder}/{content}")
     return render_template("episode.html", content=html_string)
 
 

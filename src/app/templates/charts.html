@@ -17,7 +17,7 @@
         </header>
         <div class="tab">
             {% for key in metrics.keys() %}
-                {% if key == "loudness" %}
+                {% if key == "tempo" %}
                     <button class="tablinks" onclick="openStat(event, '{{ key }}')"
                             id="defaultOpen">{{ key | title }}</button>
                 {% else %}
@@ -26,19 +26,21 @@
             {% endfor %}
         </div>
         {% for k,v in metrics.items() %}
+            {# k is the key, like "tempo" #}
+            {# v is the value, which is the whole object #}
             {% if k == 'popularity' %}
-                {% set dist = [metrics['popularity']['min']['popularity'], metrics[k]['avg'], metrics['popularity']['max']['popularity']] %}
+                {% set dist = [metrics['popularity']['minValue'], metrics[k]['avg'], metrics['popularity']['max']['popularity']] %}
             {% else %}
-                {% set dist = [metrics[k]['min']['features'][k], metrics[k]['avg'], metrics[k]['max']['features'][k]] %}
+                {% set dist = [v['minValue'], v['avg'], v['maxValue']] %}
             {% endif %}
-            {% set min_pic = metrics[k]['min']['album']['images'][1]['url'] %}
-            {% set max_pic = metrics[k]['max']['album']['images'][1]['url'] %}
-            {% set min_name = metrics[k]['min']['name'] %}
-            {% set max_name = metrics[k]['max']['name'] %}
-            {% set min_artist = metrics[k]['min']['artists'][0]['name'] %}
-            {% set max_artist = metrics[k]['max']['artists'][0]['name'] %}
-            {% set min_track_url = metrics[k]['min']['external_urls']['spotify'] %}
-            {% set max_track_url = metrics[k]['max']['external_urls']['spotify'] %}
+            {% set min_pic = v['minTrack']['album']['images'][1]['url'] %}
+            {% set max_pic = v['maxTrack']['album']['images'][1]['url'] %}
+            {% set min_name = v['minTrack']['name'] %}
+            {% set max_name = v['maxTrack']['name'] %}
+            {% set min_artist = v['minTrack']['artists'][0]['name'] %}
+            {% set max_artist = v['maxTrack']['artists'][0]['name'] %}
+            {% set min_track_url = v['minTrack']['external_urls']['spotify'] %}
+            {% set max_track_url = v['maxTrack']['external_urls']['spotify'] %}
             <div id="{{ k }}" class="tabcontent">
                 <div style="display: flex; justify-content: space-between;">
                     <div style="margin-right: 20px; max-width: 40%;">

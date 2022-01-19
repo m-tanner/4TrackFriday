@@ -1,10 +1,10 @@
-from src.aws_fetcher import AWSFetcher
+from src.aws_fetcher import AWSCloudFetcher
 from src.config_manager import ConfigManager
 from src.episode import Episode
 
 
 def test_aws_fetcher():
-    episode_fetcher = AWSFetcher(config=ConfigManager())
+    episode_fetcher = AWSCloudFetcher(config=ConfigManager())
 
     episodes = episode_fetcher.fetch_all()
     assert isinstance(episodes, list)
